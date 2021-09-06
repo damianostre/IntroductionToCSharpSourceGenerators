@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HelloWorldGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\HelloWorld\\HelloWorld.csproj"
+    }
+  }
+}

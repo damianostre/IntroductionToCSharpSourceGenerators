@@ -1,0 +1,23 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace CrudGenerator.Gen
+{
+    public class CrudDbContext : DbContext
+    {
+        private readonly string _connectionString;       
+        
+        {{ for entity in entities }}
+        public DbSet<{{ entity.entitypath }}> {{entity.entityname}}Set { get; set; }
+        {{ end }}
+
+        public CrudDbContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite($"Data Source={_connectionString}");
+        }
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UltimateCrudGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\CrudGeneratorWebApi\\CrudGeneratorWebApi.csproj"
+    }
+  }
+}

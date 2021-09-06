@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AutoTestGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\AutoTestApp\\AutoTestApp.csproj"
+    }
+  }
+}

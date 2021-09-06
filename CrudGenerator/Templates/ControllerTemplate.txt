@@ -1,0 +1,89 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+namespace CrudGenerator.Gen
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class {{ entityname }}Controller : ControllerBase
+    {
+        private readonly ILogger<{{ entityname }}Controller> _logger;
+        private string _connectionString;
+
+        public {{ entityname }}Controller(ILogger<{{ entityname }}Controller> logger, IConfiguration configuration)
+        {
+            _logger = logger;
+            _connectionString = configuration["CrudGenerator:ConnectionString"];
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<{{ entitypath }}>> Get()
+        {
+            _logger.LogInformation($"{nameof(Get)} action started");
+
+            await using var dbContext = new CrudDbContext(_connectionString);
+            return await dbContext.{{ entityname }}Set.AsNoTracking().ToArrayAsync();
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<{{ entitypath }}>> Get(int id)
+        {
+            _logger.LogInformation($"{nameof(Get)}({id}) action started");
+
+            await using var dbContext = new CrudDbContext(_connectionString);
+            var entity = await dbContext.{{ entityname }}Set.FindAsync(id);
+            
+            if(entity == null) return NotFound(id);
+            return entity;
+        }
+        
+        [HttpPost]  
+        public async Task<int> Create([FromBody] {{ entitypath }} {{ entityname }})  
+        {  
+            _logger.LogInformation($"{nameof(Create)} action started");
+            await using var dbContext = new CrudDbContext(_connectionString);
+
+            await dbContext.{{ entityname }}Set.AddAsync({{ entityname }});
+            await dbContext.SaveChangesAsync();
+
+            return {{ entityname }}.Id;
+        }
+        
+        [HttpPut("{id}")]  
+        public async Task<ActionResult> Update([FromRoute]int id, [FromBody] {{ entitypath }} {{ entityname }})  
+        {  
+            _logger.LogInformation($"{nameof(Update)} action started");
+            await using var dbContext = new CrudDbContext(_connectionString);
+
+            var entity = await dbContext.{{ entityname }}Set.FindAsync(id);
+            if(entity == null) return NotFound(id);
+
+            entity.Id = id;
+            dbContext.Update({{ entityname }});
+            await dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+        
+        [HttpDelete("{id}")]  
+        public async Task<ActionResult> Delete([FromRoute]int id)  
+        {  
+            _logger.LogInformation($"{nameof(Delete)} action started");
+            await using var dbContext = new CrudDbContext(_connectionString);
+
+            var entity = await dbContext.{{ entityname }}Set.FindAsync(id);
+            if(entity == null) return NotFound(id);
+
+            dbContext.Remove(entity);
+            await dbContext.SaveChangesAsync();
+
+            return Ok();
+        } 
+    }
+}

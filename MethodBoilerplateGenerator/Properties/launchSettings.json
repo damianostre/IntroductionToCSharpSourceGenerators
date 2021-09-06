@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MethodBoilerplateGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\MethodBoilerplateApp\\MethodBoilerplateApp.csproj"
+    }
+  }
+}
